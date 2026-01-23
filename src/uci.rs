@@ -1,18 +1,19 @@
-use std::io;
 
-mod uci {
-    fn parse_command(command: String){
-        match command.as_str() {
-            "uci" => println!("id name rustybunny\nuciok\n"),
-            "isready" => println!("readyok\n"),
-            "ucinewgame" => (),
-            "position" => (),
-            "go" => (),
-            "stop" => (),
+
+    pub fn parse_command(command: &str){
+        if command.is_empty() { return; }
+        let mut tokens = command.split_ascii_whitespace();
+        match tokens.next() {
+            Some("uci") => println!("id name rustybunny\nuciok"),
+            Some("isready") => println!("readyok"),
+            Some("ucinewgame") => (),
+            Some("position") => (),
+            Some("go") => (),
+            Some("stop") => (),
             _ => ()
         }
     }
-}
+
 
 
 
