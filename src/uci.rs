@@ -1,4 +1,5 @@
 use chess::Board;
+use std::{process::exit, str::FromStr};
 
 use crate::calculate::calculate;
 
@@ -16,6 +17,7 @@ pub fn parse_command(command: &str, board: &mut Board) {
         Some("position") => position(&mut tokens, board),
         Some("go") => go(&mut tokens, board),
         Some("stop") => (), //TODO implement
+        Some("quit") => exit(0),
         _ => (),
     }
 }
@@ -35,35 +37,37 @@ fn position(tokens: &mut std::str::SplitAsciiWhitespace, board: &mut Board) {
 // fn fen(tokens: &mut std::str::SplitAsciiWhitespace, board: &mut Board){}
 
 fn startpos(tokens: &mut std::str::SplitAsciiWhitespace, board: &mut Board) {
-    tokens.next(); // moves
+    *board = Board::default();
+    if tokens.next() != None {
+        // "moves"
+        while let Some(move_str) = tokens.next() {
+            let cm = chess::ChessMove::from_str(move_str)
+                .expect("Unable to convert from move string to chess move");
 
-    while let Some(move_str) = tokens.next() {
-        let cm = chess::ChessMove::from_san(board, move_str)
-            .expect("Unable to convert from move string to chess move");
-
-        let mut new_board = Board::default();
-
-        board.make_move(cm, &mut new_board);
-
-        *board = new_board;
+            *board = board.make_move_new(cm);
+        }
     }
 }
 
 fn go(tokens: &mut std::str::SplitAsciiWhitespace, board: &mut Board) {
     tokens.next(); // wtime
-    let wtime = tokens.next().unwrap();
+    let _wtime = tokens.next().unwrap();
     tokens.next(); // btime
-    let btime = tokens.next().unwrap();
+    let _btime = tokens.next().unwrap();
     tokens.next(); // winc
-    let winc = tokens.next().unwrap();
+    let _winc = tokens.next().unwrap();
     tokens.next(); // binc
-    let binc = tokens.next().unwrap();
+    let _binc = tokens.next().unwrap();
+    tokens.next(); // movestogo
+    let _movestogo = tokens.next().unwrap();
 
-    let best_move = calculate(board);
+    let depth = 4;
+
+    let best_move = calculate(board, depth);
 
     //println!("info score cp {}", current_score); // TODO
     println!("bestmove {}", chess::ChessMove::to_string(&best_move));
 
     // prints current fen
-    println!("{}", board.to_string());
+    // println!("{}", board.to_string());
 }
