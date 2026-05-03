@@ -1,9 +1,6 @@
 use chess::{Board, BoardStatus, ChessMove, Color, MoveGen, Piece};
 
-pub fn calculate(board: &mut Board, depth: isize) -> ChessMove {
-
-    
-
+pub fn calculate(board: &mut Board, depth: usize) -> ChessMove {
     let mut iterable = MoveGen::new_legal(&board);
     let mut best_move = ChessMove::default();
     let mut best_value = isize::MIN + 1;
@@ -28,8 +25,7 @@ pub fn calculate(board: &mut Board, depth: isize) -> ChessMove {
     return best_move;
 }
 
-fn negamax(mut alpha: isize, beta: isize, depthleft: isize, board: &mut Board) -> isize {
-
+fn negamax(mut alpha: isize, beta: isize, depthleft: usize, board: &mut Board) -> isize {
     if board.status() == BoardStatus::Checkmate {
         return isize::MIN + 1;
     }
@@ -89,8 +85,6 @@ fn evaluate(board: &mut Board) -> isize {
 
     return score;
 }
-
-// TODO: negamax framework
 
 // int alphaBeta( int alpha, int beta, int depthleft ) {
 //    if( depthleft == 0 ) return quiesce( alpha, beta );

@@ -1,7 +1,7 @@
 use chess::Board;
 use std::{process::exit, str::FromStr};
 
-use crate::calculate::calculate;
+use crate::{DEPTH, calculate::calculate};
 
 pub fn parse_command(command: &str, board: &mut Board) {
     if command.is_empty() {
@@ -61,9 +61,8 @@ fn go(tokens: &mut std::str::SplitAsciiWhitespace, board: &mut Board) {
     tokens.next(); // movestogo
     let _movestogo = tokens.next().unwrap();
 
-    let depth = 4;
 
-    let best_move = calculate(board, depth);
+    let best_move = calculate(board, DEPTH);
 
     //println!("info score cp {}", current_score); // TODO
     println!("bestmove {}", chess::ChessMove::to_string(&best_move));

@@ -3,6 +3,8 @@ mod uci;
 use chess::Board;
 use std::io;
 
+static DEPTH: usize = 6;
+
 fn main() {
     let mut board = Board::default();
 
